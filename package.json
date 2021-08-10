@@ -1,6 +1,6 @@
 {
 	"name": "getref",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Safely get the reference of a nested property from an object.",
 	"keywords": [
 		"js",
