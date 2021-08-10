@@ -1,16 +1,14 @@
 
 <div style="text-align:center">
-	<h1> cajache </h1>
-	<img height="256px" src="https://i.gyazo.com/468a720ce6a70550f5430794e42da631.png" />
+	<h1> getref </h1>
 </div>
 
 
-[![install size](https://packagephobia.com/badge?p=cajache@latest)](https://packagephobia.com/result?p=cajache@latest)
+[![install size](https://packagephobia.com/badge?p=getref@latest)](https://packagephobia.com/result?p=getref@latest)
 
 
-**cajache** is a minimalistic javascript caching library.
+**getref** is a 
 
-- ⚡ Optimizes your projects reducing the number of HTTP request performed.
 - 🚀 Lightweight.
 - ⚪️ Zero dependencies.
 
@@ -20,24 +18,20 @@
 
 
 
-<!-- TOC ignore:true -->
 # Table of contents
 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
-<!-- TOC -->
+<!-- code_chunk_output -->
 
+- [Table of contents](#table-of-contents)
 - [Import](#import)
-- [Use cases](#use-cases)
-	- [Cache a request](#cache-a-request)
-	- [Cache a paginated request](#cache-a-paginated-request)
-- [API](#api)
-	- [use](#use)
-	- [get](#get)
-	- [set](#set)
-	- [delete](#delete)
-- [<a name='table-of-contents'></a>Go to top](#a-nametable-of-contentsago-to-top)
+- [Usage](#usage)
+- [Why return [ref, lastKey]?](#why-return-ref-lastkey)
+- [Example](#example)
+- [Go to top](#a-nametable-of-contentsago-to-toptable-of-contents)
 
-<!-- /TOC -->
+<!-- /code_chunk_output -->
 
 
 
@@ -48,7 +42,7 @@
 # Import
 
 ```js
-const cajache = require("cajache");
+const getref = require("getref");
 ```
 
 
@@ -57,94 +51,60 @@ const cajache = require("cajache");
 
 
 
-# Use cases
-
-## Cache a request
+# Usage
 
 ```js
-
-// fetch 1: 248.659ms
-// fetch 2 (cached): 0.015ms
-// fetch 3 (cached): 0.008ms
-
-
-
-console.time("fetch 1");
-
-let characters = await cajache.use(
-	"characters",
-	() => axios.get("https://rickandmortyapi.com/api/character/14"),
-);
-
-console.timeEnd("fetch 1");
-console.time("fetch 2 (cached)");
-
-characters = await cajache.use(
-	"characters",
-	() => axios.get("https://rickandmortyapi.com/api/character/14"),
-);
-
-console.timeEnd("fetch 2 (cached)");
-
-
-
-console.time("fetch 3 (cached)");
-await cajache.use(
-	"characters",
-	() => axios.get("https://rickandmortyapi.com/api/character/14"),
-);
-console.timeEnd("fetch 3 (cached)");
-
-
+const [ref, lastKey] = getRef(object, path);
 ```
 
-## Cache a paginated request
+- **object** `object`: Target object. 
+- **path** `string | Array<string>`: Dot path route `"prop1.prop2"` or array route `["prop1", "prop2"]`.
+
+
+Returns `[ref, lastKey]`:
+
+- **ref** `object`: Reference of the parent of the last key of the `path`.
+- **lastKey** `string`: Last key of the path.
+
+
+<br>
+
+
+# Why return [ref, lastKey]?
+
+You can access dynamically without any danger to a deep nested property.
 
 ```js
+let bike = {
+	wheel1: {
+		type: "AD-56",
+		status: "ok"
+	},
+	wheel2: {
+		type: "AT-77",
+		status: "ok"
+	},
+};
+```
 
-// fetch page 1: 284.629ms
-// fetch page 2: 208.210ms
-// fetch page 1 (cached): 0.018ms
-// fetch page 2 (cached): 0.008ms
+**Editing**:
+```js
+let [ref, lastKey] = getRef(bike, "wheel2.type");
+ref[lastKey] = "newType";
+```
 
+**Deleting**:
+```js
+let [ref, lastKey] = getRef(bike, "wheel2.type");
+delete ref[lastKey];
+```
 
-
-console.time("fetch page 1");
-
-let characters_page1 = await cajache.use(
-	["characters", "page_1"],
-	() => axios.get("https://rickandmortyapi.com/api/character/?page=1"),
-);
-
-console.timeEnd("fetch page 1");
-console.time("fetch page 2");
-
-let characters_page2 = await cajache.use(
-	["characters", "page_2"],
-	() => axios.get("https://rickandmortyapi.com/api/character/?page=2"),
-);
-
-console.timeEnd("fetch page 2");
-
-
-
-console.time("fetch page 1 (cached)");
-
-characters_page1 = await cajache.use(
-	["characters", "page_1"],
-	() => axios.get("https://rickandmortyapi.com/api/character/?page=1"),
-);
-
-console.timeEnd("fetch page 1 (cached)");
-console.time("fetch page 2 (cached)");
-
-characters_page2 = await cajache.use(
-	["characters", "page_2"],
-	() => axios.get("https://rickandmortyapi.com/api/character/?page=2"),
-);
-
-console.timeEnd("fetch page 2 (cached)");
-
+**Safe selecting**:
+```js
+let [ref, lastKey] = getRef(bike, "wheel2.type.dontExists.asd.qwe");
+if (! ref[lastKey]) {
+	console.log("That property doesn't exists");
+};
 ```
 
 
@@ -153,125 +113,24 @@ console.timeEnd("fetch page 2 (cached)");
 
 
 
-# API
-
-## .use
+# Example
 
 ```js
-const response = cajache.use(
-	"characters",
-	() => axios.get("https://you.api.com/characters"),
-);
+let bike = {
+	wheel1: {
+		type: "AD-56",
+		status: "ok"
+	},
+	wheel2: {
+		type: "AT-77",
+		status: "ok"
+	},
+};
+
+let [ref, lastKey] = getRef(bike, "wheel2.type"); // or getRef(bike, ["wheel2", "type"])
+const wheel2_type = ref[lastKey]; // "AT-77"
 ```
 
-Or...
-
-```js
-const response = cajache.use(
-	["location_2", "page_3", "characters"],
-	() => axios.get("https://you.api.com/location2/characters?page=3"),
-);
-```
-
-| Parameter     | Type           			| Description 	|
-| :-----------: |:-------------:			| :-----		|
-| id      		| string \| Array\<string\>	| Unique identifier (or route) of the location where you want to store the cache.
-| fetchFnc      | function      			| Your fetch function that will be cached.
-| options 		| object      				| See below.
-
-<br/>
-
-| Option    	 	| Type           	| Description 	|
-| :-----------: 	|:-------------:	| :-----		|
-| expire      		| number			| Date (timestamp seconds) when you want to expire the cache.
-| path      		| string			| Dot path to the property that will be saved. Example: `"user.data"`.
-
-<br />
-
-**Example with expire:**
-
-```js
-const response = cajache.use(
-	["location_2", "page_3", "characters"],
-	() => axios.get("https://you.api.com/location2/characters?page=3"),
-	{
-		expire: (Date.now() / 1000) + (1000 * 30), // 30 seconds
-	}
-);
-```
-
-
-
-<br/>
-
-
-
-## .get
-
-```js
-const characters = cajache.get("characters");
-```
-
-Or...
-
-```js
-const characters_location2_page3 = cajache.get(["location_2", "page_3", "characters"]);
-```
-
-| Parameter     | Type           			| Description 	|
-| :-----------: |:-------------:			| :-----		|
-| id      		| string \| Array\<string\>	| Unique identifier (or route) of the location where you want to retrieve the cache.
-
-
-
-<br/>
-
-
-
-## .set
-
-```js
-cajache.set("characters", {...} );
-```
-
-Or...
-
-```js
-cajache.set(["location_2", "page_3", "characters"], {...} );
-```
-
-| Parameter     | Type           			| Description 	|
-| :-----------: |:-------------:			| :-----		|
-| id      		| string \| Array\<string\>	| Unique identifier (or route) of the location where you want to set the cache.
-| value 		| any	      				| Value you want to set
-
-
-
-<br/>
-
-
-
-## .delete
-
-Delete **all** cache boxes:
-```js
-cajache.delete();
-```
-
-Delete `characters` box:
-```js
-cajache.delete("characters");
-```
-
-Delete `location_2.page_3.characters` box:
-
-```js
-cajache.delete(["location_2", "page_3", "characters"]);
-```
-
-| Parameter     | Type           			| Description 	|
-| :-----------: |:-------------:			| :-----		|
-| id      		| string \| Array\<string\>	\| undefined | Unique identifier (or route) of the location you want to delete. If undefined all cache boxes will be deleted.
 
 
 

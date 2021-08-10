@@ -1,20 +1,23 @@
 {
 	"name": "getref",
 	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
+	"description": "Safely get the reference of a nested property from an object.",
+	"keywords": ["js", "javascript", "object", "get", "reference", "selector", "safe", "dot"],
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"declaration:build": "tsc -b"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Icaruk/getRef.git"
 	},
-	"keywords": [],
-	"author": "",
 	"license": "ISC",
 	"bugs": {
 		"url": "https://github.com/Icaruk/getRef/issues"
 	},
-	"homepage": "https://github.com/Icaruk/getRef#readme"
+	"homepage": "https://github.com/Icaruk/getRef#readme",
+	"main": "index.js",
+	"files": [
+		"index.js"
+	],
+	"dependencies": {}
 }
