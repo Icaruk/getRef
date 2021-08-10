@@ -17,7 +17,9 @@
 	"homepage": "https://github.com/Icaruk/getRef#readme",
 	"main": "index.js",
 	"files": [
-		"index.js"
+		"index.js",
+		"index.d.ts"
 	],
+	"types": "index.d.ts",
 	"dependencies": {}
 }

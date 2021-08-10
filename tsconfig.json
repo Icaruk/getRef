@@ -1,6 +1,6 @@
 {
 	"files": [
-		"lib/index.js"
+		"index.js"
 	],
 	"compilerOptions": {
 		"module": "ES2020",
@@ -9,6 +9,6 @@
 		"allowJs": true,
 		"declaration": true,
 		"emitDeclarationOnly": true,
-		"outDir": "lib",
+		"outDir": "",
 	}
 }
