@@ -28,7 +28,7 @@
 module.exports = function getRef(obj, arrKeys) {
 	
 	if (typeof arrKeys === "string") arrKeys = arrKeys.split(".");
-	console.log( "arrKeys", `(${typeof arrKeys}): `, arrKeys);
+	
 	
 	let ref = obj;
 	let lastKey = null;
@@ -46,3 +46,5 @@ module.exports = function getRef(obj, arrKeys) {
 	return [ref, lastKey];
 	
 };
+
+

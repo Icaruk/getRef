@@ -93,6 +93,12 @@ let [ref, lastKey] = getRef(bike, "wheel2.type");
 ref[lastKey] = "newType";
 ```
 
+**Creating new nested property**:
+```js
+let [ref, lastKey] = getRef(bike, "wheel2.dontExists.abc.qwe");
+ref[lastKey] = "nowItExists";
+```
+
 **Deleting**:
 ```js
 let [ref, lastKey] = getRef(bike, "wheel2.type");
