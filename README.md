@@ -7,7 +7,7 @@
 [![install size](https://packagephobia.com/badge?p=getref@latest)](https://packagephobia.com/result?p=getref@latest)
 
 
-**getref** is a 
+🤏 Safely get the reference of a nested property from an object.
 
 - 🚀 Lightweight.
 - ⚪️ Zero dependencies.
