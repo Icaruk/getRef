@@ -1,34 +1,39 @@
 {
-	"name": "getref",
+	"name": "objeto",
 	"version": "1.0.2",
-	"description": "Safely get the reference of a nested property from an object.",
+	"description": "Object helper to get, set, delete and check nested properties without risk.",
 	"keywords": [
 		"js",
 		"javascript",
 		"object",
 		"get",
-		"reference",
-		"selector",
+		"util",
+		"helper",
+		"set",
 		"safe",
 		"dot"
 	],
 	"scripts": {
+		"jest": "jest",
 		"declaration:build": "tsc -b"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Icaruk/getRef.git"
+		"url": "git+https://github.com/Icaruk/objeto.git"
 	},
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/Icaruk/getRef/issues"
+		"url": "https://github.com/Icaruk/objeto/issues"
 	},
-	"homepage": "https://github.com/Icaruk/getRef#readme",
+	"homepage": "https://github.com/Icaruk/objeto#readme",
 	"main": "index.js",
 	"files": [
 		"index.js",
 		"index.d.ts"
 	],
 	"types": "index.d.ts",
-	"dependencies": {}
+	"dependencies": {},
+	"devDependencies": {
+		"jest": "^27.0.6"
+	}
 }

@@ -1,8 +1,12 @@
 
 /**
+* @typedef {Array<string> | string} Path Dot path `"prop1.prop2"` or array path `["prop1", "prop2"]`
+*/
+
+/**
  * Gets the reference of a nested property inside an object from a dot path route "prop1.prop2" or array route ["prop1", "prop2"].
  * @param {*} obj 
- * @param {Array<string> | string} arrKeys Dot path route `"prop1.prop2"` or array route `["prop1", "prop2"]`
+ * @param {Path} path
  * @returns {Array<*,string>} [ref, lastKey]. `ref[lastKey] = "stuff"`. `delete ref[lastKey]`.
  * 
  * @example
@@ -25,17 +29,17 @@
  * console.log( ref2[lastKey2] ); // undefined
  * 
 */
-module.exports = function getRef(obj, arrKeys) {
+function getRef(obj, path) {
 	
-	if (typeof arrKeys === "string") arrKeys = arrKeys.split(".");
+	if (typeof path === "string") path = path.split(".");
 	
 	
 	let ref = obj;
 	let lastKey = null;
-	const lastIdx = arrKeys.length - 1;
+	const lastIdx = path.length - 1;
 	
 	
-	arrKeys.forEach( (_key, _idx) => {
+	path.forEach( (_key, _idx) => {
 		if (_idx === lastIdx) return lastKey = _key;
 		
 		if (!ref[_key]) ref[_key] = {};
@@ -44,6 +48,58 @@ module.exports = function getRef(obj, arrKeys) {
 	
 	
 	return [ref, lastKey];
+	
+};
+
+
+
+module.exports = function objeto (objTarget) {
+	
+	return {
+	
+		get: (path) => {
+			const [ref, lastKey] = getRef(objTarget, path);
+			return ref[lastKey];
+		},
+		
+		set: (path, value) => {
+			const [ref, lastKey] = getRef(objTarget, path);
+			ref[lastKey] = value;
+		},
+		
+		delete: (path) => {
+			const [ref, lastKey] = getRef(objTarget, path);
+			const deleted = ref[lastKey];
+			delete ref[lastKey];
+			return deleted;
+		},
+		
+		has: (path) => {
+			const [ref, lastKey] = getRef(objTarget, path);
+			
+			if (!ref || typeof ref !== "object") return false;
+			
+			try {
+				return lastKey in ref;
+			} catch (err) {
+				return false;
+			};
+		},
+		
+		isType: (path, type) => {
+			const [ref, lastKey] = getRef(objTarget, path);
+			
+			if (type === "object") {
+				return (
+					typeof ref[lastKey] === "object" &&
+					ref[lastKey] !== null
+				);
+			};
+			
+			return typeof ref[lastKey] === type;		
+		},	
+		
+	};
 	
 };
 
