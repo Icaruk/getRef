@@ -57,16 +57,27 @@ module.exports = function objeto (objTarget) {
 	
 	return {
 	
+		/**
+		 * @param {Path} path 
+		*/
 		get: (path) => {
 			const [ref, lastKey] = getRef(objTarget, path);
 			return ref[lastKey];
 		},
 		
+		/**
+		 * @param {Path} path 
+		 * @param {*} value Value to set.
+		*/		
 		set: (path, value) => {
 			const [ref, lastKey] = getRef(objTarget, path);
 			ref[lastKey] = value;
 		},
 		
+		/**
+		 * @param {Path} path 
+		 * @returns {*} Deleted property
+		*/
 		delete: (path) => {
 			const [ref, lastKey] = getRef(objTarget, path);
 			const deleted = ref[lastKey];
@@ -74,6 +85,9 @@ module.exports = function objeto (objTarget) {
 			return deleted;
 		},
 		
+		/**
+		 * @param {Path} path 
+		*/			
 		has: (path) => {
 			const [ref, lastKey] = getRef(objTarget, path);
 			
@@ -85,7 +99,12 @@ module.exports = function objeto (objTarget) {
 				return false;
 			};
 		},
+
 		
+		/**
+		 * @param {Path} path 
+		 * @param {string} type Type of data (from typeof)
+		*/			
 		isType: (path, type) => {
 			const [ref, lastKey] = getRef(objTarget, path);
 			
