@@ -1,13 +1,13 @@
 
 <div style="text-align:center">
-	<h1> getref </h1>
+	<h1> objeto </h1>
 </div>
 
 
-[![install size](https://packagephobia.com/badge?p=getref@latest)](https://packagephobia.com/result?p=getref@latest)
+[![install size](https://packagephobia.com/badge?p=objeto@latest)](https://packagephobia.com/result?p=objeto@latest)
 
 
-🤏 Safely get the reference of a nested property from an object.
+🦺 Object helper to get, set, delete and check nested properties without risk.
 
 - 🚀 Lightweight.
 - ⚪️ Zero dependencies.
@@ -27,7 +27,11 @@
 - [Table of contents](#table-of-contents)
 - [Import](#import)
 - [Usage](#usage)
-- [Why return [ref, lastKey]?](#why-return-ref-lastkey)
+  - [get](#get)
+  - [set](#set)
+  - [delete](#delete)
+  - [has](#has)
+  - [isType](#istype)
 - [Example](#example)
 - [Go to top](#a-nametable-of-contentsago-to-toptable-of-contents)
 
@@ -42,7 +46,7 @@
 # Import
 
 ```js
-const getref = require("getref");
+const objeto = require("objeto");
 ```
 
 
@@ -53,64 +57,58 @@ const getref = require("getref");
 
 # Usage
 
+## get
+
+If the `targetObject` doesn't contain the `path` property, it will return `undefined`.
+
+- **targetObject** `object`: Object to target.
+- **path** `string | Array<string>`: Dot path `"prop1.prop2"` or array path `["prop1", "prop2"]`.
+
 ```js
-const [ref, lastKey] = getRef(object, path);
+objeto(targetObject).get(path);
 ```
 
-- **object** `object`: Target object. 
-- **path** `string | Array<string>`: Dot path route `"prop1.prop2"` or array route `["prop1", "prop2"]`.
+## set
 
-
-Returns `[ref, lastKey]`:
-
-- **ref** `object`: Reference of the parent of the last key of the `path`.
-- **lastKey** `string`: Last key of the path.
-
-
-<br>
-
-
-# Why return [ref, lastKey]?
-
-You can access dynamically without any danger to a deep nested property.
+- **targetObject** `object`: See [get](#get).
+- **path** See [get](#get). 
+- **value** `any`: Value to set.
 
 ```js
-let bike = {
-	wheel1: {
-		type: "AD-56",
-		status: "ok"
-	},
-	wheel2: {
-		type: "AT-77",
-		status: "ok"
-	},
-};
+objeto(targetObject).set(path, value);
 ```
 
-**Editing**:
+## delete
+
+- **deletedValue** `any`: Deleted value.
+- **targetObject** `object`: See [get](#get).
+- **path** See [get](#get). 
+
 ```js
-let [ref, lastKey] = getRef(bike, "wheel2.type");
-ref[lastKey] = "newType";
+const deletedValue = objeto(targetObject).delete(path);
 ```
 
-**Creating new nested property**:
+## has
+
+Check if the `targetObject` has the specified property.
+
+- **targetObject** `object`: See [get](#get).
+- **path** See [get](#get). 
+
 ```js
-let [ref, lastKey] = getRef(bike, "wheel2.dontExists.abc.qwe");
-ref[lastKey] = "nowItExists";
+objeto(targetObject).has(path);
 ```
 
-**Deleting**:
-```js
-let [ref, lastKey] = getRef(bike, "wheel2.type");
-delete ref[lastKey];
-```
+## isType
 
-**Safe selecting**:
+Check if a property value type is equal the specified type.
+
+- **targetObject** `object`: See [get](#get).
+- **path** See [get](#get). 
+- **type** `string`: See [typeof](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof).
+
 ```js
-let [ref, lastKey] = getRef(bike, "wheel2.type.dontExists.asd.qwe");
-if (! ref[lastKey]) {
-	console.log("That property doesn't exists");
-};
+objeto(targetObject).isType(path, type);
 ```
 
 
@@ -133,10 +131,16 @@ let bike = {
 	},
 };
 
-let [ref, lastKey] = getRef(bike, "wheel2.type"); // or getRef(bike, ["wheel2", "type"])
-const wheel2_type = ref[lastKey]; // "AT-77"
-```
+objeto(bike).get("wheel2.type"); // "AT-77"
+objeto(bike).set("wheel2.type", "newType");
+objeto(bike).delete("wheel2.type"); // "AT-77"
+objeto(bike).has("wheel2.type"); // true
+objeto(bike).isType("wheel2.type", "string"); // true
 
+objeto(bike).get("wheel2.type.doesntExists"); // undefined
+objeto(bike).set("wheel2.type.doesntExists.newProp", "newType"); // new nested property is created
+objeto(bike).has("wheel2.type.doesntExists"); // false
+```
 
 
 

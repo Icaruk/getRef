@@ -1,6 +1,6 @@
 {
 	"name": "objeto",
-	"version": "1.0.2",
+	"version": "1.0.0",
 	"description": "Object helper to get, set, delete and check nested properties without risk.",
 	"keywords": [
 		"js",
